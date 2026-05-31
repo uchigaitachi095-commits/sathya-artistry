@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sathya Artistry – Book Your Slot</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:    #8b0000;
+    --red2:   #a01515;
+    --gold:   #c8902a;
+    --gold2:  #f5d57a;
+    --cream:  #fdf6ec;
+    --dark:   #150303;
+    --card:   #fff8f0;
+    --text:   #2e1008;
+    --muted:  #7a5030;
+    --border: #e2c99a;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(160deg, var(--dark) 0%, #2c0505 55%, #1a0a00 100%);
+    padding: 40px 20px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(to right, transparent, var(--gold), var(--gold2), var(--gold), transparent);
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 22px, rgba(200,144,42,0.035) 22px, rgba(200,144,42,0.035) 23px);
+  }
+  .hdr-ornament { display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:12px; }
+  .hdr-line { flex:1; max-width:70px; height:1px; background:linear-gradient(to right,transparent,var(--gold)); }
+  .hdr-line.r { background:linear-gradient(to left,transparent,var(--gold)); }
+  .hdr-gem { width:8px; height:8px; background:var(--gold); transform:rotate(45deg); }
+  header h1 {
+    font-family:'Cinzel Decorative',serif;
+    font-size: clamp(1.7rem,5.5vw,2.6rem);
+    background: linear-gradient(180deg,var(--gold2) 0%,var(--gold) 50%,#9a5e10 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    letter-spacing:0.1em;
+    filter: drop-shadow(0 2px 10px rgba(200,144,42,0.28));
+  }
+  header .sub {
+    font-style:italic; color:var(--gold); font-size:0.9rem;
+    letter-spacing:0.3em; text-transform:uppercase; margin-top:5px; opacity:0.8;
+  }
+  .service-pills {
+    display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:16px;
+  }
+  .pill {
+    border:1px solid rgba(200,144,42,0.45); color:rgba(245,213,122,0.85);
+    font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase;
+    padding:4px 14px; font-family:'Lato',sans-serif; font-weight:300;
+    cursor:pointer; transition:all 0.2s;
+    position:relative;
+  }
+  .pill:hover, .pill.active {
+    background:var(--gold); color:var(--dark); border-color:var(--gold);
+  }
+
+  /* ── STEP INDICATOR ── */
+  .steps-bar {
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    padding:18px 20px;
+    display:flex; justify-content:center; align-items:center; gap:0;
+    position:sticky; top:0; z-index:100;
+    box-shadow: 0 2px 12px rgba(139,0,0,0.07);
+  }
+  .step-item { display:flex; align-items:center; gap:0; }
+  .step-circle {
+    width:32px; height:32px; border-radius:50%;
+    border:2px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Lato',sans-serif; font-size:0.75rem; font-weight:700;
+    color:var(--muted); background:#fff;
+    transition:all 0.3s;
+    flex-shrink:0;
+  }
+  .step-circle.active { border-color:var(--red); color:#fff; background:var(--red); }
+  .step-circle.done   { border-color:var(--gold); color:var(--gold); background:#fff8ec; }
+  .step-label {
+    font-size:0.65rem; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--muted); margin-left:7px; font-family:'Lato',sans-serif;
+    display:none;
+  }
+  .step-label.active { color:var(--red); font-weight:700; display:block; }
+  .step-connector { width:36px; height:1px; background:var(--border); margin:0 6px; flex-shrink:0; }
+  @media(min-width:500px){ .step-label { display:block; } }
+
+  /* ── MAIN CONTENT ── */
+  .main { max-width:680px; margin:0 auto; padding:36px 18px 60px; }
+
+  /* SECTION PANELS */
+  .panel { display:none; animation:panelIn 0.4s ease both; }
+  .panel.active { display:block; }
+  @keyframes panelIn {
+    from { opacity:0; transform:translateY(16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .panel-title {
+    font-family:'Cinzel Decorative',serif;
+    font-size:1rem; color:var(--red);
+    letter-spacing:0.12em; margin-bottom:4px;
+  }
+  .panel-sub { font-style:italic; color:var(--muted); font-size:0.9rem; margin-bottom:24px; }
+
+  /* ── SERVICE CARDS ── */
+  .service-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:14px; }
+  .service-card {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-top:3px solid transparent;
+    padding:20px 16px 16px;
+    cursor:pointer;
+    transition:all 0.22s;
+    position:relative;
+    text-align:center;
+  }
+  .service-card:hover { border-top-color:var(--gold); transform:translateY(-3px); box-shadow:0 8px 24px rgba(139,0,0,0.09); }
+  .service-card.selected { border-top-color:var(--red); background:#fff0ef; box-shadow:0 0 0 1px var(--red); }
+  .service-icon { font-size:1.8rem; margin-bottom:8px; }
+  .service-name { font-weight:600; font-size:1rem; color:var(--text); }
+  .service-price { font-size:0.78rem; color:var(--gold); letter-spacing:0.1em; margin-top:4px; }
+  .service-duration { font-size:0.72rem; color:var(--muted); font-style:italic; margin-top:2px; }
+  .service-check {
+    position:absolute; top:10px; right:10px;
+    width:20px; height:20px; border-radius:50%;
+    background:var(--red); color:#fff;
+    font-size:0.65rem; display:none;
+    align-items:center; justify-content:center;
+  }
+  .service-card.selected .service-check { display:flex; }
+
+  /* ── CALENDAR ── */
+  .calendar-wrap { background:var(--card); border:1px solid var(--border); padding:24px 20px; }
+  .cal-header {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:18px;
+  }
+  .cal-month {
+    font-family:'Cinzel Decorative',serif; font-size:0.95rem;
+    color:var(--red); letter-spacing:0.1em;
+  }
+  .cal-nav {
+    background:none; border:1px solid var(--border);
+    width:32px; height:32px; cursor:pointer;
+    color:var(--gold); font-size:1rem;
+    transition:all 0.2s; display:flex; align-items:center; justify-content:center;
+  }
+  .cal-nav:hover { background:var(--red); color:#fff; border-color:var(--red); }
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+  .cal-day-name {
+    text-align:center; font-size:0.65rem; letter-spacing:0.15em;
+    text-transform:uppercase; color:var(--muted); padding:6px 0;
+    font-family:'Lato',sans-serif;
+  }
+  .cal-day {
+    aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+    font-size:0.85rem; cursor:pointer; border-radius:2px;
+    transition:all 0.18s; color:var(--text);
+    border:1px solid transparent;
+  }
+  .cal-day:hover:not(.disabled):not(.empty) { background:var(--gold2); border-color:var(--gold); }
+  .cal-day.selected { background:var(--red); color:#fff; border-color:var(--red); }
+  .cal-day.today { border-color:var(--gold); color:var(--gold); font-weight:700; }
+  .cal-day.disabled { color:#ccc; cursor:not-allowed; }
+  .cal-day.empty { cursor:default; }
+
+  /* ── TIME SLOTS ── */
+  .slots-wrap { margin-top:22px; }
+  .slots-label { font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; font-family:'Lato',sans-serif; }
+  .slots-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:8px; }
+  .slot {
+    border:1px solid var(--border); background:var(--card);
+    text-align:center; padding:9px 6px; cursor:pointer;
+    font-size:0.82rem; color:var(--text); transition:all 0.18s;
+    font-family:'Lato',sans-serif;
+  }
+  .slot:hover:not(.booked) { border-color:var(--gold); background:var(--gold2); color:var(--dark); }
+  .slot.selected { background:var(--red); color:#fff; border-color:var(--red); }
+  .slot.booked { background:#f0f0f0; color:#bbb; cursor:not-allowed; text-decoration:line-through; font-size:0.72rem; }
+
+  /* ── FORM FIELDS ── */
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media(max-width:480px){ .form-grid { grid-template-columns:1fr; } }
+  .field { display:flex; flex-direction:column; gap:5px; }
+  .field.full { grid-column:1/-1; }
+  .field label {
+    font-size:0.68rem; letter-spacing:0.22em; text-transform:uppercase;
+    color:var(--muted); font-family:'Lato',sans-serif;
+  }
+  .field input, .field select, .field textarea {
+    border:1px solid var(--border); background:#fff;
+    padding:11px 14px; font-family:'Cormorant Garamond',serif; font-size:1rem;
+    color:var(--text); outline:none; transition:border-color 0.2s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color:var(--red); }
+  .field textarea { resize:vertical; min-height:80px; }
+
+  /* ── BOOKING SUMMARY ── */
+  .summary-card {
+    background: linear-gradient(135deg,#fff8f0,#fff);
+    border:1px solid var(--border);
+    border-left:4px solid var(--red);
+    padding:24px 22px;
+    margin-bottom:24px;
+  }
+  .summary-title { font-family:'Cinzel Decorative',serif; font-size:0.85rem; color:var(--red); letter-spacing:0.12em; margin-bottom:14px; }
+  .summary-row { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+  .summary-key { font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); font-family:'Lato',sans-serif; }
+  .summary-val { font-size:0.95rem; color:var(--text); font-weight:600; text-align:right; }
+  .summary-divider { height:1px; background:var(--border); margin:12px 0; }
+  .summary-total { font-family:'Cinzel Decorative',serif; font-size:1.1rem; color:var(--red); }
+
+  /* ── BUTTONS ── */
+  .btn-row { display:flex; gap:12px; margin-top:24px; flex-wrap:wrap; }
+  .btn-back {
+    flex:1; min-width:100px;
+    border:1px solid var(--border); background:#fff; color:var(--muted);
+    padding:13px 20px; cursor:pointer; font-family:'Lato',sans-serif;
+    font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase;
+    transition:all 0.2s;
+  }
+  .btn-back:hover { border-color:var(--red); color:var(--red); }
+  .btn-next {
+    flex:2; min-width:160px;
+    background:linear-gradient(135deg,var(--red),var(--red2));
+    border:1px solid var(--gold); color:var(--gold2);
+    padding:13px 24px; cursor:pointer; font-family:'Cinzel Decorative',serif;
+    font-size:0.78rem; letter-spacing:0.15em;
+    transition:all 0.2s;
+  }
+  .btn-next:hover { background:linear-gradient(135deg,var(--red2),var(--red)); transform:translateY(-2px); box-shadow:0 6px 18px rgba(139,0,0,0.2); }
+  .btn-next:disabled { opacity:0.45; cursor:not-allowed; transform:none; box-shadow:none; }
+
+  /* ── SUCCESS ── */
+  .success-panel {
+    text-align:center; padding:40px 20px;
+  }
+  .success-icon { font-size:4rem; margin-bottom:18px; animation:popIn 0.5s cubic-bezier(.175,.885,.32,1.275) both; }
+  @keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+  .success-panel h2 { font-family:'Cinzel Decorative',serif; font-size:1.3rem; color:var(--red); margin-bottom:8px; }
+  .success-panel p { color:var(--muted); font-style:italic; font-size:1rem; line-height:1.7; }
+  .booking-ref {
+    display:inline-block; margin:20px 0;
+    background:var(--dark); color:var(--gold2);
+    font-family:'Lato',sans-serif; font-size:0.85rem; letter-spacing:0.25em;
+    padding:10px 28px; border:1px solid var(--gold);
+  }
+  .whatsapp-btn {
+    display:inline-flex; align-items:center; gap:10px;
+    background:#25D366; color:#fff;
+    padding:14px 28px; border:none; cursor:pointer;
+    font-family:'Lato',sans-serif; font-size:0.85rem; font-weight:700;
+    letter-spacing:0.12em; text-decoration:none;
+    margin-top:12px; transition:transform 0.2s;
+  }
+  .whatsapp-btn:hover { transform:translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    background:var(--dark); text-align:center;
+    padding:20px 16px;
+    color:rgba(200,144,42,0.5);
+    font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase;
+  }
+  footer a { color:var(--gold); text-decoration:none; }
+
+  /* ornament divider */
+  .orn-div { display:flex; align-items:center; gap:12px; margin:28px 0; }
+  .orn-div-line { flex:1; height:1px; background:linear-gradient(to right,transparent,var(--border),transparent); }
+  .orn-div-gem { width:6px; height:6px; background:var(--gold); transform:rotate(45deg); opacity:0.6; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr-ornament">
+    <div class="hdr-line"></div>
+    <div class="hdr-gem"></div>
+    <div class="hdr-line r"></div>
+  </div>
+  <h1>Sathya</h1>
+  <p class="sub">Book Your Slot</p>
+  <div class="service-pills">
+    <span class="pill">Aari Blouse</span>
+    <span class="pill">Makeup</span>
+    <span class="pill">Mehendi</span>
+    <span class="pill">Saree Draping</span>
+  </div>
+</header>
+
+<!-- STEP BAR -->
+<div class="steps-bar">
+  <div class="step-item">
+    <div class="step-circle active" id="sc1">1</div>
+    <span class="step-label active" id="sl1">Service</span>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-item">
+    <div class="step-circle" id="sc2">2</div>
+    <span class="step-label" id="sl2">Date &amp; Time</span>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-item">
+    <div class="step-circle" id="sc3">3</div>
+    <span class="step-label" id="sl3">Your Details</span>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-item">
+    <div class="step-circle" id="sc4">4</div>
+    <span class="step-label" id="sl4">Confirm</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- STEP 1 – Service -->
+  <div class="panel active" id="panel1">
+    <div class="panel-title">Choose Your Service</div>
+    <div class="panel-sub">Select the service you'd like to book with Sathya</div>
+    <div class="service-grid" id="serviceGrid">
+      <div class="service-card" data-name="Bridal Makeup" data-price="₹2500" data-dur="3–4 hrs" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-icon">💄</div>
+        <div class="service-name">Bridal Makeup</div>
+        <div class="service-price">Starting ₹2,500</div>
+        <div class="service-duration">3–4 hours</div>
+      </div>
+      <div class="service-card" data-name="Party Makeup" data-price="₹800" data-dur="1–2 hrs" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-icon">✨</div>
+        <div class="service-name">Party Makeup</div>
+        <div class="service-price">Starting ₹800</div>
+        <div class="service-duration">1–2 hours</div>
+      </div>
+      <div class="service-card" data-name="Aari Blouse Design" data-price="₹1200" data-dur="3–5 days" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-icon">🪡</div>
+        <div class="service-name">Aari Blouse Design</div>
+        <div class="service-price">Starting ₹1,200</div>
+        <div class="service-duration">3–5 days delivery</div>
+      </div>
+      <div class="service-card" data-name="Bridal Mehendi" data-price="₹1500" data-dur="2–3 hrs" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-icon">🌿</div>
+        <div class="service-name">Bridal Mehendi</div>
+        <div class="service-price">Starting ₹1,500</div>
+        <div class="service-duration">2–3 hours</div>
+      </div>
+      <div class="service-card" data-name="Simple Mehendi" data-price="₹300" data-dur="30–45 min" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-icon">🌸</div>
+        <div class="service-name">Simple Mehendi</div>
+        <div class="service-price">Starting ₹300</div>
+        <div class="service-duration">30–45 mins</div>
+      </div>
+      <div class="service-card" data-name="Saree Draping" data-price="₹500" data-dur="30 min" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-icon">🥻</div>
+        <div class="service-name">Saree Draping</div>
+        <div class="service-price">Starting ₹500</div>
+        <div class="service-duration">30 minutes</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-next" id="btn1" onclick="goStep(2)" disabled>Next – Pick Date &amp; Time ✦</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 – Date & Time -->
+  <div class="panel" id="panel2">
+    <div class="panel-title">Pick a Date &amp; Time</div>
+    <div class="panel-sub">Choose your preferred appointment slot</div>
+    <div class="calendar-wrap">
+      <div class="cal-header">
+        <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+        <div class="cal-month" id="calMonth"></div>
+        <button class="cal-nav" onclick="changeMonth(1)">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="slots-wrap" id="slotsWrap" style="display:none">
+      <div class="slots-label">Available Time Slots</div>
+      <div class="slots-grid" id="slotsGrid"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goStep(1)">← Back</button>
+      <button class="btn-next" id="btn2" onclick="goStep(3)" disabled>Next – Your Details ✦</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 – Details -->
+  <div class="panel" id="panel3">
+    <div class="panel-title">Your Details</div>
+    <div class="panel-sub">Help Sathya prepare perfectly for your appointment</div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Full Name *</label>
+        <input type="text" id="fName" placeholder="Your name" oninput="validateForm()"/>
+      </div>
+      <div class="field">
+        <label>Phone Number *</label>
+        <input type="tel" id="fPhone" placeholder="+91 XXXXX XXXXX" oninput="validateForm()"/>
+      </div>
+      <div class="field">
+        <label>WhatsApp Number</label>
+        <input type="tel" id="fWA" placeholder="Same as phone if same"/>
+      </div>
+      <div class="field">
+        <label>Occasion</label>
+        <select id="fOccasion">
+          <option value="">Select occasion...</option>
+          <option>Wedding</option>
+          <option>Engagement</option>
+          <option>Baby Shower</option>
+          <option>Birthday</option>
+          <option>Festival</option>
+          <option>Party / Function</option>
+          <option>Photoshoot</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label>Special Requests / Notes</label>
+        <textarea id="fNotes" placeholder="Any specific design references, allergies, or preferences..."></textarea>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goStep(2)">← Back</button>
+      <button class="btn-next" id="btn3" onclick="goStep(4)" disabled>Next – Review Booking ✦</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 – Confirm -->
+  <div class="panel" id="panel4">
+    <div class="panel-title">Confirm Your Booking</div>
+    <div class="panel-sub">Please review your details before confirming</div>
+    <div class="summary-card">
+      <div class="summary-title">✦ Booking Summary</div>
+      <div class="summary-row">
+        <span class="summary-key">Service</span>
+        <span class="summary-val" id="sum-service">–</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-key">Date</span>
+        <span class="summary-val" id="sum-date">–</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-key">Time</span>
+        <span class="summary-val" id="sum-time">–</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-key">Duration</span>
+        <span class="summary-val" id="sum-dur">–</span>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-row">
+        <span class="summary-key">Name</span>
+        <span class="summary-val" id="sum-name">–</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-key">Phone</span>
+        <span class="summary-val" id="sum-phone">–</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-key">Occasion</span>
+        <span class="summary-val" id="sum-occasion">–</span>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-row">
+        <span class="summary-key">Starting Price</span>
+        <span class="summary-val summary-total" id="sum-price">–</span>
+      </div>
+    </div>
+    <p style="font-style:italic;color:var(--muted);font-size:0.88rem;line-height:1.65;">
+      ✦ Final pricing will be confirmed by Sathya after reviewing your requirements.<br>
+      ✦ A WhatsApp confirmation will be sent to you after booking.
+    </p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goStep(3)">← Back</button>
+      <button class="btn-next" onclick="confirmBooking()">✦ Confirm Booking ✦</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="panel" id="panelSuccess">
+    <div class="success-panel">
+      <div class="success-icon">🎉</div>
+      <h2>Booking Confirmed!</h2>
+      <p>Thank you for booking with Sathya Artistry.<br>Your slot has been reserved successfully.</p>
+      <div class="booking-ref" id="bookingRef">REF: STH-000000</div>
+      <br>
+      <p style="color:var(--muted);font-size:0.85rem;">Sathya will contact you on WhatsApp to confirm the details.</p>
+      <br>
+      <a class="whatsapp-btn" id="waLink" href="#" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Send on WhatsApp
+      </a>
+      <br><br>
+      <button class="btn-back" style="margin:0 auto;display:block;" onclick="resetBooking()">Book Another Slot</button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  ✦ Sathya Artistry &amp; Beauty ✦ &nbsp;|&nbsp;
+  <a href="https://www.instagram.com/trendy_aritistry_by_sathya" target="_blank">@trendy_aritistry_by_sathya</a>
+</footer>
+
+<script>
+// ── STATE ──
+const state = {
+  service: null, servicePrice: null, serviceDur: null,
+  date: null, time: null,
+  name: '', phone: '', occasion: '', notes: ''
+};
+
+let calYear, calMonth;
+const bookedSlots = {}; // track selected slots per day
+
+// ── INIT ──
+const now = new Date();
+calYear  = now.getFullYear();
+calMonth = now.getMonth();
+renderCalendar();
+
+// ── STEPS ──
+function goStep(n) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel' + n).classList.add('active');
+  updateStepBar(n);
+  if (n === 4) fillSummary();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function updateStepBar(current) {
+  for (let i = 1; i <= 4; i++) {
+    const c = document.getElementById('sc' + i);
+    const l = document.getElementById('sl' + i);
+    c.classList.remove('active','done');
+    l.classList.remove('active');
+    if (i < current)  { c.classList.add('done');  c.textContent = '✓'; }
+    if (i === current) { c.classList.add('active'); c.textContent = i; l.classList.add('active'); }
+    if (i > current)   c.textContent = i;
+  }
+}
+
+// ── SERVICE SELECTION ──
+function selectService(el) {
+  document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.service    = el.dataset.name;
+  state.servicePrice = el.dataset.price;
+  state.serviceDur   = el.dataset.dur;
+  document.getElementById('btn1').disabled = false;
+}
+
+// ── CALENDAR ──
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function changeMonth(d) {
+  calMonth += d;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  document.getElementById('calMonth').textContent = MONTHS[calMonth] + ' ' + calYear;
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+  DAYS.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-day-name'; el.textContent = d; grid.appendChild(el);
+  });
+  const first = new Date(calYear, calMonth, 1).getDay();
+  const total = new Date(calYear, calMonth+1, 0).getDate();
+  const todayStr = now.toDateString();
+
+  for (let i = 0; i < first; i++) {
+    const el = document.createElement('div'); el.className = 'cal-day empty'; grid.appendChild(el);
+  }
+  for (let d = 1; d <= total; d++) {
+    const el  = document.createElement('div');
+    const dt  = new Date(calYear, calMonth, d);
+    const past = dt < new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const sun  = dt.getDay() === 0; // closed Sundays
+    el.textContent = d;
+    el.className   = 'cal-day' + (past||sun ? ' disabled' : '') + (dt.toDateString()===todayStr ? ' today' : '');
+    if (!past && !sun) el.onclick = () => selectDate(d, dt);
+    // re-highlight if already selected
+    if (state.date && state.date.getDate()===d && state.date.getMonth()===calMonth && state.date.getFullYear()===calYear)
+      el.classList.add('selected');
+    grid.appendChild(el);
+  }
+}
+
+function selectDate(d, dt) {
+  state.date = dt; state.time = null;
+  document.querySelectorAll('.cal-day').forEach(el => el.classList.remove('selected'));
+  event.target.classList.add('selected');
+  renderSlots(dt);
+  document.getElementById('btn2').disabled = true;
+}
+
+function renderSlots(dt) {
+  const wrap = document.getElementById('slotsWrap');
+  const grid = document.getElementById('slotsGrid');
+  wrap.style.display = 'block'; grid.innerHTML = '';
+  const allSlots = ['9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM',
+                    '12:00 PM','12:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM',
+                    '4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM'];
+  // pseudo-random booked slots per date
+  const key = dt.toDateString();
+  if (!bookedSlots[key]) {
+    bookedSlots[key] = allSlots.filter((_,i) => (i * 7 + dt.getDate()) % 5 === 0);
+  }
+  allSlots.forEach(t => {
+    const el = document.createElement('div');
+    const booked = bookedSlots[key].includes(t);
+    el.textContent = t;
+    el.className   = 'slot' + (booked ? ' booked' : '');
+    if (!booked) el.onclick = () => selectSlot(t, el);
+    grid.appendChild(el);
+  });
+}
+
+function selectSlot(t, el) {
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  state.time = t;
+  document.getElementById('btn2').disabled = false;
+}
+
+// ── FORM VALIDATION ──
+function validateForm() {
+  const n = document.getElementById('fName').value.trim();
+  const p = document.getElementById('fPhone').value.trim();
+  document.getElementById('btn3').disabled = !(n && p.length >= 10);
+}
+
+// ── SUMMARY ──
+function fillSummary() {
+  state.name    = document.getElementById('fName').value.trim();
+  state.phone   = document.getElementById('fPhone').value.trim();
+  state.occasion= document.getElementById('fOccasion').value;
+  document.getElementById('sum-service').textContent = state.service;
+  document.getElementById('sum-date').textContent    = state.date.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('sum-time').textContent    = state.time;
+  document.getElementById('sum-dur').textContent     = state.serviceDur;
+  document.getElementById('sum-name').textContent    = state.name;
+  document.getElementById('sum-phone').textContent   = state.phone;
+  document.getElementById('sum-occasion').textContent= state.occasion || '–';
+  document.getElementById('sum-price').textContent   = state.servicePrice;
+}
+
+// ── CONFIRM ──
+function confirmBooking() {
+  const ref = 'STH-' + Date.now().toString().slice(-6);
+  document.getElementById('bookingRef').textContent = 'REF: ' + ref;
+
+  // WhatsApp message
+  const msg = encodeURIComponent(
+    `✦ New Booking – Sathya Artistry ✦\n\n` +
+    `Ref: ${ref}\nService: ${state.service}\nDate: ${state.date.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}\nTime: ${state.time}\n\nName: ${state.name}\nPhone: ${state.phone}\nOccasion: ${state.occasion||'–'}\nNotes: ${document.getElementById('fNotes').value||'–'}`
+  );
+  document.getElementById('waLink').href = `https://wa.me/919999999999?text=${msg}`;
+
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panelSuccess').classList.add('active');
+  updateStepBar(5);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function resetBooking() {
+  state.service=null; state.servicePrice=null; state.serviceDur=null;
+  state.date=null; state.time=null; state.name=''; state.phone=''; state.occasion=''; state.notes='';
+  document.querySelectorAll('.service-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('fName').value='';
+  document.getElementById('fPhone').value='';
+  document.getElementById('fWA').value='';
+  document.getElementById('fOccasion').value='';
+  document.getElementById('fNotes').value='';
+  document.getElementById('btn1').disabled=true;
+  document.getElementById('btn2').disabled=true;
+  document.getElementById('btn3').disabled=true;
+  document.getElementById('slotsWrap').style.display='none';
+  calYear=now.getFullYear(); calMonth=now.getMonth();
+  renderCalendar();
+  goStep(1);
+}
+</script>
+</body>
+</html>
